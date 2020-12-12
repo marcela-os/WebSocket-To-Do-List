@@ -1,4 +1,5 @@
 import React from 'react';
+import { io } from 'socket.io-client';
 
 class App extends React.Component {
 
@@ -26,6 +27,7 @@ class App extends React.Component {
         </section>
       </div>
     );
+    const socket = io();
   };
 
 };
