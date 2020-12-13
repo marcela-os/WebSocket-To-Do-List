@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
         const task = tasks.find(task => task.id === removeTask);
         console.log('Task was removed: ' + task);
         const index = tasks.indexOf(task);
-        tasks.splice(index);
+        tasks.splice(index,1);
         socket.broadcast.emit('removeTask', removeTask);
       });
   

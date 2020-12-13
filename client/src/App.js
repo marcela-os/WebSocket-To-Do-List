@@ -10,6 +10,7 @@ class App extends React.Component {
 
   state = {
     tasks: [],
+    taskName: ''
   }
 
 
@@ -19,6 +20,12 @@ class App extends React.Component {
     this.socket.on('removeTask', (id) => { this.removeTask(id) });
   } 
 
+  submitForm(e) {
+    e.preventDefault();
+    this.addTask(this.state.taskName);
+    this.socket.emit('addTask', this.state.taskName);
+  }
+
   removeTask(id) {
     if (this.state.tasks.find(task => task.id === id)) {
       this.setState(this.state.tasks.splice(id, 1))
@@ -27,7 +34,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { tasks, id } = this.state;
+    const { tasks, id, taskName } = this.state;
 
     console.log('tasks', tasks);
     return (
@@ -50,8 +57,8 @@ class App extends React.Component {
           </ul>
     
           <form id="add-task-form">
-            <input className="text-input" autocomplete="off" type="text" placeholder="Type your description" id="task-name" />
-            <button className="btn" type="submit">Add</button>
+            <input className="text-input" autoComplete="off" type="text" placeholder="Type your description" id="task-name" value={taskName} onChange={(e) => {this.setState({taskName: e.target.value})}}/>
+            <button className="btn" type="submit" onClick={(e) => this.submitForm(e)}>Add</button>
           </form>
     
         </section>
