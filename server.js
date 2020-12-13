@@ -1,7 +1,10 @@
 const express = require('express');
 const socket = require('socket.io');
 
-const tasks =[];
+const tasks = [
+    { id: 1, name: 'Shopping' }, 
+    { id: 2, name: 'Go out with a dog' }
+  ];
 
 const app = express();
 
@@ -11,15 +14,11 @@ const server = app.listen(process.env.PORT || 8000, () => {
 
 const io = socket(server);
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Not found...' });
-});
-
 io.on('connection', (socket) => {
     console.log('New user! Its id – ' + socket.id);
   
     socket.emit('updateData', (tasks) => {
-    console.log('Tasks: ', tasks);
+      console.log('Tasks: ', tasks);
     });
   
     socket.on('addTask', (task) => {
@@ -39,3 +38,7 @@ io.on('connection', (socket) => {
   
     console.log('I\'ve added a listener on tasks event \n');
   }); 
+
+app.use((req, res) => {
+  res.status(404).send({ message: 'Not found...' });
+});

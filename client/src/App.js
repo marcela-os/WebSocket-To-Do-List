@@ -1,9 +1,35 @@
 import React from 'react';
-import { io } from 'socket.io-client';
+import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 
 class App extends React.Component {
+  static propTypes = {
+    tasks: PropTypes.array,
+    id: PropTypes.string,
+  }
+
+  state = {
+    tasks: [],
+  }
+
+
+  componentDidMount() {
+    this.socket = io(`http://localhost:8000`);
+
+    this.socket.on('removeTask', (id) => { this.removeTask(id) });
+  } 
+
+  removeTask(id) {
+    if (this.state.tasks.find(task => task.id === id)) {
+      this.setState(this.state.tasks.splice(id, 1))
+      this.socket.emit('removeTask', id)
+    };
+  };
 
   render() {
+    const { tasks, id } = this.state;
+
+    console.log('tasks', tasks);
     return (
       <div className="App">
     
@@ -14,9 +40,13 @@ class App extends React.Component {
         <section className="tasks-section" id="tasks-section">
           <h2>Tasks</h2>
     
+          
           <ul className="tasks-section__list" id="tasks-list">
-            <li class="task">Shopping <button class="btn btn--red">Remove</button></li>
-            <li class="task">Go out with a dog <button class="btn btn--red">Remove</button></li>
+          {tasks.map (task => (
+                <li key={task.id}> {task}
+                  <button className="btn btn--red" onClick={() => this.removeTask(id)}>Remove</button>
+                </li>
+            ))}
           </ul>
     
           <form id="add-task-form">
@@ -27,7 +57,6 @@ class App extends React.Component {
         </section>
       </div>
     );
-    const socket = io();
   };
 
 };
