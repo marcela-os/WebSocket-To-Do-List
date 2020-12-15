@@ -1,6 +1,5 @@
 const express = require('express');
 const socket = require('socket.io');
-const path = require('path');
 
 const tasks = [
     { id: 1, name: 'Shopping' }, 
@@ -14,21 +13,23 @@ const server = app.listen(process.env.PORT || 8000, () => {
 });
 
 const io = socket(server);
+let index = 3;
 
 io.on('connection', (socket) => {
     console.log('New user! Its id – ' + socket.id);
+    
   
-    socket.emit('updateData', (tasks) => {
-      console.log('Tasks: ', tasks);
-    });
+    socket.emit('updateData', tasks);
   
     socket.on('addTask', (task) => {
       console.log('User ' + socket.id + 'added new task:' + task);
-      tasks.push(task);
-      socket.broadcast.emit('addTask', task);
+      let newTask = { id: index, name: task };
+      tasks.push(newTask);
+      socket.broadcast.emit('addTask', newTask);
+      index = index + 1;
     });
 
-    socket.on('remove', (removeTask) => {
+    socket.on('removeTask', (removeTask) => {
         const task = tasks.find(task => task.id === removeTask);
         console.log('Task was removed: ' + task);
         const index = tasks.indexOf(task);
