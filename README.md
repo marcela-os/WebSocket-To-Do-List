@@ -1,4 +1,4 @@
-
+to d
 
 <p align="center">
 <img src="client/public/to-do.gif" title="app" alt="app"></a>
@@ -6,7 +6,7 @@
 <br>
 
 
-# Chat app
+# To-Do list
 
 To-Do App using WebSocket which can be shared by multiple users.
 
